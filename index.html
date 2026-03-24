@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MQT_BarSizeStudy Indicator - NinjaTrader 8</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{
+      font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
+      line-height:1.6;
+      color:#e0e0e0;
+      background:#0a0a0a;
+    }
+    .container{max-width:1200px;margin:0 auto;padding:0 20px}
+
+    /* Header */
+    header{
+      background:#000;
+      padding:18px 0;
+      border-bottom:2px solid #00ff00;
+      position:sticky;
+      top:0;
+      z-index:100;
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:14px;
+      min-height:56px;
+    }
+    .brand img{
+      height:38px;
+      width:auto;
+      object-fit:contain;
+      display:block;
+    }
+    .brand h1{
+      color:#00ff00;
+      font-size:1.5rem;
+      line-height:1.2;
+      letter-spacing:.2px;
+    }
+
+    /* Hero */
+    .hero{
+      background:linear-gradient(135deg,#000 0%,#1a1a1a 100%);
+      padding:80px 0;
+      text-align:center;
+      border-bottom:3px solid #00ff00;
+    }
+    .hero h2{
+      font-size:2.8rem;
+      color:#00ff00;
+      margin-bottom:18px;
+      text-shadow:0 0 20px rgba(0,255,0,.5);
+    }
+    .hero p{
+      font-size:1.25rem;
+      color:#b0b0b0;
+      margin:0 auto 28px auto;
+      max-width:980px;
+    }
+    .cta-button{
+      display:inline-block;
+      background:#00ff00;
+      color:#000;
+      padding:15px 40px;
+      text-decoration:none;
+      border-radius:5px;
+      font-weight:800;
+      font-size:1.05rem;
+      transition:all .3s;
+      border:2px solid #00ff00;
+    }
+    .cta-button:hover{
+      background:#000;
+      color:#00ff00;
+      transform:translateY(-2px);
+      box-shadow:0 5px 20px rgba(0,255,0,.4);
+    }
+
+    /* Sections */
+    .section-title{
+      text-align:center;
+      font-size:2.2rem;
+      color:#00ff00;
+      margin-bottom:50px;
+      text-transform:uppercase;
+      letter-spacing:2px;
+    }
+
+    /* Features */
+    .features{padding:60px 0;background:#0f0f0f}
+    .feature-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+      gap:30px;
+    }
+    .feature-card{
+      background:#1a1a1a;
+      padding:30px;
+      border-radius:8px;
+      border:1px solid #333;
+      transition:all .3s;
+    }
+    .feature-card:hover{
+      border-color:#00ff00;
+      box-shadow:0 5px 20px rgba(0,255,0,.2);
+      transform:translateY(-5px);
+    }
+    .feature-card h3{color:#00ff00;margin-bottom:15px;font-size:1.35rem}
+    .feature-card p{color:#b0b0b0;line-height:1.8}
+    code{color:#b8ffb8}
+
+    /* Screenshots */
+    .screenshots{padding:60px 0;background:#000}
+    .screenshot-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(420px,1fr));
+      gap:30px;
+      margin-top:40px;
+    }
+    .screenshot-item{
+      background:#1a1a1a;
+      padding:20px;
+      border-radius:8px;
+      border:1px solid #333;
+      transition:all .3s;
+    }
+    .screenshot-item:hover{
+      border-color:#00ff00;
+      box-shadow:0 5px 20px rgba(0,255,0,.3);
+    }
+    .screenshot-item img{
+      width:100%;
+      border-radius:6px;
+      margin-bottom:14px;
+      display:block;
+    }
+    .screenshot-item h3{color:#00ff00;text-align:center;font-size:1.15rem}
+    .screenshot-item p{color:#9a9a9a;text-align:center;margin-top:6px;font-size:.95rem}
+
+    /* How It Works */
+    .how-it-works{padding:60px 0;background:#0f0f0f}
+    .steps{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+      gap:30px;
+      margin-top:40px;
+    }
+    .step{
+      background:#1a1a1a;
+      padding:30px;
+      border-radius:8px;
+      border-left:4px solid #00ff00;
+      transition:all .3s;
+    }
+    .step:hover{background:#222;transform:translateX(5px)}
+    .step-number{
+      display:inline-block;
+      background:#00ff00;
+      color:#000;
+      width:40px;height:40px;
+      border-radius:50%;
+      text-align:center;
+      line-height:40px;
+      font-weight:800;
+      font-size:1.2rem;
+      margin-bottom:15px;
+    }
+    .step h3{color:#00ff00;margin-bottom:10px}
+    .step p{color:#b0b0b0}
+
+    /* Settings */
+    .settings{padding:60px 0;background:#000}
+    .settings-table{
+      width:100%;
+      margin-top:30px;
+      border-collapse:collapse;
+      background:#1a1a1a;
+      border-radius:8px;
+      overflow:hidden;
+    }
+    .settings-table th{
+      background:#00ff00;
+      color:#000;
+      padding:15px;
+      text-align:left;
+      font-weight:800;
+    }
+    .settings-table td{
+      padding:15px;
+      border-bottom:1px solid #333;
+      color:#b0b0b0;
+      vertical-align:top;
+    }
+    .settings-table tr:hover{background:#222}
+
+    /* FAQ */
+    .faq{padding:60px 0;background:#0f0f0f}
+    .faq-item{
+      background:#1a1a1a;
+      padding:25px;
+      margin-bottom:20px;
+      border-radius:8px;
+      border-left:4px solid #00ff00;
+    }
+    .faq-item h3{color:#00ff00;margin-bottom:10px;font-size:1.15rem}
+    .faq-item p{color:#b0b0b0;line-height:1.8}
+
+    /* Footer */
+    footer{
+      background:#000;
+      padding:40px 0;
+      text-align:center;
+      border-top:2px solid #00ff00;
+    }
+    footer p{color:#666;margin-bottom:10px}
+    footer a{color:#00ff00;text-decoration:none}
+    footer a:hover{text-decoration:underline}
+
+    /* Responsive */
+    @media (max-width:768px){
+      .hero h2{font-size:2rem}
+      .hero p{font-size:1.1rem}
+      .screenshot-grid{grid-template-columns:1fr}
+      .settings-table{font-size:.92rem}
+      .brand img{height:34px}
+      .brand h1{font-size:1.35rem}
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <div class="container">
+      <div class="brand">
+        <img src="https://cdn.abacus.ai/images/e502179e-72c0-4cfb-83fc-d6af291d8dcf.png" alt="Logo" />
+        <h1>MQT_BarSizeStudy</h1>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="container">
+      <h2>Identify Your Most Volatile Trading Windows — With Per-Bar Labels & CSV Export</h2>
+      <p>
+        MQT_BarSizeStudy ranks custom time-of-day slots by average bar size (High-Low) across all loaded history.
+        Optionally display per-bar size labels (ticks/points/both), filter by RTH, select specific days of the week,
+        and export detailed CSV reports. Perfect for traders who want to pinpoint high-volatility windows and optimize entry timing.
+      </p>
+      <a class="cta-button" href="#" onclick="alert('Add your download/checkout URL here'); return false;">Download Now</a>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section class="features">
+    <div class="container">
+      <h2 class="section-title">Key Features</h2>
+      <div class="feature-grid">
+        <div class="feature-card">
+          <h3>Custom Time Slot Analysis</h3>
+          <p>
+            Define your own slot size (in seconds) and the indicator ranks each time-of-day window by average bar size (High-Low in ticks).
+          </p>
+        </div>
+
+        <div class="feature-card">
+          <h3>Top Volatility Window (On-Chart)</h3>
+          <p>
+            Display a live on-chart window showing the top N most volatile time slots with average, max, and observation counts—updated every N bars.
+          </p>
+        </div>
+
+        <div class="feature-card">
+          <h3>Per-Bar Size Labels</h3>
+          <p>
+            Optionally show labels under each bar displaying size in <strong>Ticks</strong>, <strong>Points</strong>, or <strong>Both</strong>—with configurable displacement and color.
+          </p>
+        </div>
+
+        <div class="feature-card">
+          <h3>RTH Filtering</h3>
+          <p>
+            Use <code>UseRthWindow</code> to filter slot statistics to Regular Trading Hours only, or leave it off to analyze the full session.
+          </p>
+        </div>
+
+        <div class="feature-card">
+          <h3>Day-of-Week Selection</h3>
+          <p>
+            Enable/disable specific days (Sunday–Saturday) to focus your analysis on the trading days that matter most to your strategy.
+          </p>
+        </div>
+
+        <div class="feature-card">
+          <h3>CSV Export</h3>
+          <p>
+            Export a detailed CSV file with all time slots ranked by average bar size, including max values, timestamps, and observation counts.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Screenshots -->
+  <section class="screenshots">
+    <div class="container">
+      <h2 class="section-title">See It In Action</h2>
+
+      <div class="screenshot-grid">
+        <div class="screenshot-item">
+          <img src="https://cdn.abacus.ai/images/9972359d-058a-4079-9297-c63df4230cd0.png" alt="Bar size labels showing tick values under each bar" />
+          <h3>Ticks Display Mode</h3>
+          <p>Per-bar labels showing size in ticks with Top Volatility Window in upper-right corner</p>
+        </div>
+
+        <div class="screenshot-item">
+          <img src="https://cdn.abacus.ai/images/d405e8e7-993c-4819-8c53-d574bc8f51fa.png" alt="Bar size labels showing tick values with detailed volatility stats" />
+          <h3>Detailed Volatility Stats</h3>
+          <p>Top Volatility Window displays ranked time slots with average, max, and observation counts</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works -->
+  <section class="how-it-works">
+    <div class="container">
+      <h2 class="section-title">How It Works</h2>
+      <div class="steps">
+        <div class="step">
+          <div class="step-number">1</div>
+          <h3>Define Your Time Slots</h3>
+          <p>
+            Set <strong>SlotSeconds</strong> (e.g., 30 seconds) to divide the trading day into custom windows.
+            The indicator tracks each slot's average bar size (High-Low in ticks).
+          </p>
+        </div>
+
+        <div class="step">
+          <div class="step-number">2</div>
+          <h3>Collect Historical Data</h3>
+          <p>
+            As bars close, the indicator accumulates statistics for each time slot across all loaded history,
+            optionally filtering by RTH and selected days of the week.
+          </p>
+        </div>
+
+        <div class="step">
+          <div class="step-number">3</div>
+          <h3>Display Top Volatility Window</h3>
+          <p>
+            Enable <strong>ShowTopVolatilityWindow</strong> to see a live on-chart ranking of the top N most volatile time slots,
+            updated every N bars with average, max, and observation counts.
+          </p>
+        </div>
+
+        <div class="step">
+          <div class="step-number">4</div>
+          <h3>Export & Analyze</h3>
+          <p>
+            When the indicator reaches real-time or terminates, it prints the top N slots to the Output window
+            and optionally exports a full CSV report for deeper analysis.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Settings -->
+  <section class="settings">
+    <div class="container">
+      <h2 class="section-title">Indicator Settings</h2>
+      <table class="settings-table">
+        <thead>
+          <tr>
+            <th>Parameter</th>
+            <th>Description</th>
+            <th>Default</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Parameters -->
+          <tr>
+            <td><strong>TopN</strong></td>
+            <td>Number of top-ranked time slots to print to the Output window and include in the CSV export.</td>
+            <td>25</td>
+          </tr>
+          <tr>
+            <td><strong>SlotSeconds</strong></td>
+            <td>Size of each time-of-day slot in seconds (e.g., 30 = 30-second windows).</td>
+            <td>30</td>
+          </tr>
+          <tr>
+            <td><strong>UseRthWindow</strong></td>
+            <td>If true, only bars within the RTH window (defined by RthStartTime/RthEndTime) are included in slot statistics.</td>
+            <td>true</td>
+          </tr>
+          <tr>
+            <td><strong>RthStartTime</strong></td>
+            <td>RTH start time in HHmmss format (local PC time). Example: 83000 = 8:30:00 AM.</td>
+            <td>83000</td>
+          </tr>
+          <tr>
+            <td><strong>RthEndTime</strong></td>
+            <td>RTH end time in HHmmss format (local PC time). Example: 150000 = 3:00:00 PM.</td>
+            <td>150000</td>
+          </tr>
+          <tr>
+            <td><strong>ExportCsv</strong></td>
+            <td>If true, exports a CSV file with all time slots ranked by average bar size.</td>
+            <td>true</td>
+          </tr>
+          <tr>
+            <td><strong>CsvFileName</strong></td>
+            <td>Name of the CSV file to export (saved to NinjaTrader user data directory).</td>
+            <td>MQT_BarSizeStudy.csv</td>
+          </tr>
+
+          <!-- Top Volatility Window -->
+          <tr>
+            <td><strong>ShowTopVolatilityWindow</strong></td>
+            <td>Display a live on-chart window showing the top N most volatile time slots.</td>
+            <td>true</td>
+          </tr>
+          <tr>
+            <td><strong>TopVolatilitySlots</strong></td>
+            <td>Number of top slots to display in the on-chart volatility window (1-50).</td>
+            <td>15</td>
+          </tr>
+          <tr>
+            <td><strong>TopVolatilityWindowPosition</strong></td>
+            <td>Position of the volatility window on the chart (TopLeft/TopRight/BottomLeft/BottomRight).</td>
+            <td>TopLeft</td>
+          </tr>
+          <tr>
+            <td><strong>TopVolatilityUpdateEveryNBars</strong></td>
+            <td>Update the volatility window every N bars (1 = every bar, higher = less frequent updates).</td>
+            <td>20</td>
+          </tr>
+
+          <!-- Label Settings -->
+          <tr>
+            <td><strong>ShowBarSizeLabels</strong></td>
+            <td>Display per-bar size labels under each bar.</td>
+            <td>true</td>
+          </tr>
+          <tr>
+            <td><strong>LabelMode</strong></td>
+            <td>Label display mode: Ticks, Points, or TicksAndPoints.</td>
+            <td>Ticks</td>
+          </tr>
+          <tr>
+            <td><strong>LabelDisplacementTicks</strong></td>
+            <td>Number of ticks below the bar's low to place the label (0-1000).</td>
+            <td>2</td>
+          </tr>
+          <tr>
+            <td><strong>LabelFontSize</strong></td>
+            <td>Font size for bar size labels (note: chart default text style is used on some NT8 builds).</td>
+            <td>12</td>
+          </tr>
+          <tr>
+            <td><strong>LabelBrush</strong></td>
+            <td>Color of the bar size labels.</td>
+            <td>DimGray</td>
+          </tr>
+          <tr>
+            <td><strong>LabelOnlyDuringRth</strong></td>
+            <td>If true, only show labels for bars that fall within the RTH window (independent of stats filter).</td>
+            <td>false</td>
+          </tr>
+          <tr>
+            <td><strong>LabelEveryNBars</strong></td>
+            <td>Show a label every N bars (1 = every bar, higher = less frequent labels).</td>
+            <td>1</td>
+          </tr>
+
+          <!-- Days -->
+          <tr>
+            <td><strong>RunSunday</strong></td>
+            <td>Include Sunday bars in the analysis.</td>
+            <td>false</td>
+          </tr>
+          <tr>
+            <td><strong>RunMonday</strong></td>
+            <td>Include Monday bars in the analysis.</td>
+            <td>true</td>
+          </tr>
+          <tr>
+            <td><strong>RunTuesday</strong></td>
+            <td>Include Tuesday bars in the analysis.</td>
+            <td>true</td>
+          </tr>
+          <tr>
+            <td><strong>RunWednesday</strong></td>
+            <td>Include Wednesday bars in the analysis.</td>
+            <td>true</td>
+          </tr>
+          <tr>
+            <td><strong>RunThursday</strong></td>
+            <td>Include Thursday bars in the analysis.</td>
+            <td>true</td>
+          </tr>
+          <tr>
+            <td><strong>RunFriday</strong></td>
+            <td>Include Friday bars in the analysis.</td>
+            <td>true</td>
+          </tr>
+          <tr>
+            <td><strong>RunSaturday</strong></td>
+            <td>Include Saturday bars in the analysis.</td>
+            <td>false</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="faq">
+    <div class="container">
+      <h2 class="section-title">Frequently Asked Questions</h2>
+
+      <div class="faq-item">
+        <h3>What does MQT_BarSizeStudy analyze?</h3>
+        <p>
+          It divides the trading day into custom time slots (defined by <strong>SlotSeconds</strong>) and ranks each slot
+          by average bar size (High-Low in ticks) across all loaded historical data.
+        </p>
+      </div>
+
+      <div class="faq-item">
+        <h3>How do I filter the analysis to Regular Trading Hours only?</h3>
+        <p>
+          Enable <strong>UseRthWindow</strong> and set <strong>RthStartTime</strong> and <strong>RthEndTime</strong> to your desired RTH window.
+          Only bars within this window will be included in the slot statistics.
+        </p>
+      </div>
+
+      <div class="faq-item">
+        <h3>Can I see the results on the chart in real-time?</h3>
+        <p>
+          Yes. Enable <strong>ShowTopVolatilityWindow</strong> to display a live on-chart window showing the top N most volatile time slots,
+          updated every N bars with average, max, and observation counts.
+        </p>
+      </div>
+
+      <div class="faq-item">
+        <h3>What are the per-bar labels?</h3>
+        <p>
+          When <strong>ShowBarSizeLabels</strong> is enabled, the indicator displays the size of each bar (High-Low) under the bar.
+          You can choose to display in <strong>Ticks</strong>, <strong>Points</strong>, or <strong>Both</strong>.
+        </p>
+      </div>
+
+      <div class="faq-item">
+        <h3>Can I filter labels independently from statistics?</h3>
+        <p>
+          Yes. <strong>LabelOnlyDuringRth</strong> filters only the labels (independent of the stats filter).
+          You can also use <strong>LabelEveryNBars</strong> to reduce label frequency.
+        </p>
+      </div>
+
+      <div class="faq-item">
+        <h3>How do I export the results?</h3>
+        <p>
+          Enable <strong>ExportCsv</strong> and specify a <strong>CsvFileName</strong>. When the indicator reaches real-time or terminates,
+          it exports a CSV file to your NinjaTrader user data directory with all time slots ranked by average bar size.
+        </p>
+      </div>
+
+      <div class="faq-item">
+        <h3>Can I analyze specific days of the week only?</h3>
+        <p>
+          Yes. Use the <strong>Days</strong> group parameters (RunSunday, RunMonday, etc.) to enable/disable specific days.
+          Only bars from enabled days will be included in the analysis.
+        </p>
+      </div>
+
+      <div class="faq-item">
+        <h3>What slot size should I use?</h3>
+        <p>
+          It depends on your trading style. Scalpers might use 30-60 seconds, while swing traders might use 300-600 seconds (5-10 minutes).
+          Experiment with different values to find the optimal window for your strategy.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <p>&copy; 2026 myQuantrader.com - All Rights Reserved</p>
+      <p>For support, visit <a href="https://myquantrader.com">myQuantrader.com</a></p>
+    </div>
+  </footer>
+</body>
+</html>
